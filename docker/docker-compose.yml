@@ -1,0 +1,40 @@
+mesos-master:
+  image: bcrusu/mesos:latest
+  entrypoint: mesos-master
+  command: --cluster=playground --port=5050 --registry=in_memory 
+  hostname: mesos_master
+  net: "host"
+  ports:
+   - "5050:5050"
+
+mesos-slave1:
+  image: bcrusu/mesos:latest
+  entrypoint: mesos-slave
+  command: --master=mesos_master:5050 --port=5051 --resources='cpus:2;mem:512'
+  hostname: mesos_slave1
+  net: "host"
+  ports:
+   - "5051:5051"
+  volumes:
+   - ../var/lib/mysql
+ - ./cache:/tmp/cache
+ - ~/configs:/etc/configs/:ro
+
+
+mesos-slave2:
+  image: bcrusu/mesos:latest
+  entrypoint: mesos-slave
+  command: --master=mesos_master:5050 --port=5052 --resources='cpus:2;mem:512'
+  hostname: mesos_slave2
+  net: "host"
+  ports:
+   - "5052:5052"
+
+mesos-slave3:
+  image: bcrusu/mesos:latest
+  entrypoint: mesos-slave
+  command: --master=mesos_master:5050 --port=5053 --resources='cpus:2;mem:512'
+  hostname: mesos_slave3
+  net: "host"
+  ports:
+   - "5053:5053"

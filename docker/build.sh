@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker build -t bcrusu/mesos-master:latest -f /dockerfile-mesos-master /mesos-context
+MESOS_CONTEXT="./mesos"
 
-docker build -t bcrusu/mesos-slave:latest -f /dockerfile-mesos-slave /mesos-context
+docker build -t bcrusu/mesos:latest -f $MESOS_CONTEXT/dockerfile $MESOS_CONTEXT

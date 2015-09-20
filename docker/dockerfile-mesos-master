@@ -1,8 +1,0 @@
-﻿FROM ubuntu:vivid
-MAINTAINER bcrusu <bcrusu@users.noreply.github.com>
-
-ENV REFRESHED_AT 2015-09-18
-RUN install-mesos.sh
-
-CMD ["--registry=in_memory"]
-ENTRYPOINT ["mesos-master"]

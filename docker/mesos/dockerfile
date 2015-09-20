@@ -1,0 +1,9 @@
+FROM ubuntu:15.04
+MAINTAINER bcrusu <bcrusu@users.noreply.github.com>
+
+ENV REFRESHED_AT 2015-09-19
+
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF && \
+    echo "deb http://repos.mesosphere.io/ubuntu vivid main" > /etc/apt/sources.list.d/mesosphere.list && \
+    apt-get -y update && \
+    apt-get -y install mesos
