@@ -1,0 +1,71 @@
+#!/bin/bash
+
+SCRIPTDIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+CLUSTERDIR=${SCRIPTDIR}/cluster
+TARGETJAR=${SCRIPTDIR}/../target/mesosTest-1.0-SNAPSHOT.jar
+
+start_cluster() {
+	if [ ! -f "$TARGETJAR" ]; then
+		echo "Could not find target jar at: $TARGETJAR..."
+		exit 1
+	fi
+
+	if [ ! -d "$CLUSTERDIR" ]; then
+		echo "Creating cluster work dir at: $CLUSTERDIR..."
+		mkdir "$CLUSTERDIR"
+	fi
+
+	cp -u "$TARGETJAR" "$CLUSTERDIR/mesosTest.jar"
+
+	# TODO: call Docker-Compose
+}
+
+stop_cluster() {
+	echo ""
+	# TODO: call Docker-Compose
+}
+
+clean_cluster_dir() {			
+	echo "Removing cluster work dir at: $CLUSTERDIR..."
+	rm -r "$CLUSTERDIR"
+}
+
+
+if [ -z "$SCRIPTDIR" ]; then
+	echo "Could not detect current script dir..."
+	exit 1
+fi
+
+case "$1" in
+	start)
+		echo "Starting..."
+		start_cluster
+		echo "Done."
+		;;
+	stop)
+		echo "Stopping..."
+		stop_cluster
+		echo "Done."
+		;;
+	clean)
+		echo "Cleaning cluster dir..."
+		clean_cluster_dir
+		echo "Done."
+		;;
+	restart)
+		echo "Restarting..."
+		stop_cluster
+	
+		if [ "$2" = "-c" ]; then
+			clean_cluster_dir
+		fi
+
+		start_cluster
+		echo "Done."
+		;;
+	*)
+		echo "Usage: cluster {start|stop|restart|clean}"
+		exit 1
+		;;
+esac
+
