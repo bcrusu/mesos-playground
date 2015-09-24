@@ -17,17 +17,17 @@ start_cluster() {
 
 	cp -u "$TARGETJAR" "$CLUSTERDIR/mesosTest.jar"
 
-	# TODO: call Docker-Compose
+	docker-compose up -d --no-recreate
 }
 
 stop_cluster() {
-	echo ""
-	# TODO: call Docker-Compose
+	docker-compose kill
+	docker-compose rm -f
 }
 
 clean_cluster_dir() {			
 	echo "Removing cluster work dir at: $CLUSTERDIR..."
-	rm -r "$CLUSTERDIR"
+	sudo rm -rf "$CLUSTERDIR"
 }
 
 
