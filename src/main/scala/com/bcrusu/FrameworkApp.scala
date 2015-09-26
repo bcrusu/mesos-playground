@@ -15,15 +15,17 @@ trait FrameworkApp {
     running match {
       case true => throw new IllegalStateException("Framework running.")
       case false =>
-        val mesosMaster = appArguments.getValue("mesos.master").getOrElse(throw new IllegalArgumentException("mesos.master property not set"))
-
+        val mesosMaster = appArguments.mesosMaster.getOrElse(throw new IllegalArgumentException("The property 'mesos.master' was not set."))
         val frameworkInfo = createFrameworkInfo()
+
         scheduler = createScheduler()
         driver = new MesosSchedulerDriver(scheduler, frameworkInfo, mesosMaster)
 
         Future {
           driver.run
         }
+
+        running = true
     }
 
   final def shutdown(): Unit =
@@ -31,13 +33,15 @@ trait FrameworkApp {
       case false => throw new IllegalStateException("Framework not running.")
       case true =>
         scheduler.shutdown(5.minutes) {
-          driver.stop()
+          driver.stop(false)
         }
+
+        running = false
     }
 
   def createScheduler(): Scheduler
 
-  def createFrameworkInfo() : Protos.FrameworkInfo
+  def createFrameworkInfo(): Protos.FrameworkInfo
 }
 
 object FrameworkApp {

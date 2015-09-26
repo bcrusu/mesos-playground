@@ -32,4 +32,14 @@ object MesosUtils {
 
     count
   }
+
+  def isTerminalTaskState(state: Protos.TaskState): Boolean = {
+    import Protos.TaskState._
+    state match {
+      case TASK_FINISHED | TASK_FAILED | TASK_KILLED | TASK_LOST =>
+        true
+      case _ =>
+        false
+    }
+  }
 }

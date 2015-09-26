@@ -11,10 +11,11 @@ class TestScheduler() extends com.bcrusu.Scheduler {
   val TASK_MEM = 32.0
 
   private val taskQueue = mutable.Queue[String]()
-  private var currentTaskId: Int = 1
+  private var currentTaskId: Int = 0
 
   override protected def handleResourceOffer(offer: Protos.Offer): Seq[Protos.TaskInfo] = {
-    val maxTasks = MesosUtils.getMaxTasksForOffer(offer, TASK_CPUS, TASK_MEM)
+    val maxTasks = 0
+      //TODO: MesosUtils.getMaxTasksForOffer(offer, TASK_CPUS, TASK_MEM)
 
     val result = mutable.Buffer[Protos.TaskInfo]()
 
@@ -31,7 +32,9 @@ class TestScheduler() extends com.bcrusu.Scheduler {
 
   private lazy val executorInfo: Protos.ExecutorInfo = {
     val command = Protos.CommandInfo.newBuilder
-      .setValue("java -cp ") //TODO: path the executor app
+      .setValue("java -cp /cluster/mesosTest.jar:/usr/share/scala/lib/* com.bcrusu.App") //TODO: path the executor app
+
+    //TODO /usr/share/java/mesos-0.23.0.jar
 
     Protos.ExecutorInfo.newBuilder
       .setExecutorId(Protos.ExecutorID.newBuilder.setValue("TestExecutor"))

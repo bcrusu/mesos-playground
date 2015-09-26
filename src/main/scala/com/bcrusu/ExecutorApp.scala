@@ -13,15 +13,9 @@ trait ExecutorApp {
       case false =>
         executor = createExecutor()
         driver = new MesosExecutorDriver(executor)
-        driver.run()
-    }
 
-  final def shutdown(): Unit =
-    running match {
-      case false => throw new IllegalStateException("Executor not running.")
-      case true =>
-        executor.shutdown(driver)
-        driver.stop()
+        val runStatus = driver.run()
+        Console.println(s"Driver disconnected with status '$runStatus'.")
     }
 
   def createExecutor(): Executor

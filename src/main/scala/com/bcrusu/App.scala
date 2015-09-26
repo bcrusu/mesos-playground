@@ -15,8 +15,7 @@ object App {
           case _ =>
             if (appArguments.framework.isDefined)
               runFramework(appArguments)
-
-            if (appArguments.executor.isDefined)
+            else if (appArguments.executor.isDefined)
               runExecutor(appArguments)
         }
     }
@@ -39,6 +38,7 @@ object App {
         sys.exit(-1)
       case Some(framework) =>
         framework.run(appArguments)
+        println("Framework is running. Press any key to exit...")
         waitEnterKey()
         framework.shutdown()
     }
@@ -50,7 +50,5 @@ object App {
         sys.exit(-1)
       case Some(executor) =>
         executor.run(appArguments)
-        waitEnterKey()
-        executor.shutdown()
     }
 }

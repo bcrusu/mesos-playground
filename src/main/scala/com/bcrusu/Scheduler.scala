@@ -44,6 +44,7 @@ trait Scheduler extends mesos.Scheduler {
   override final def frameworkMessage(driver: SchedulerDriver, executorId: Protos.ExecutorID, slaveId: Protos.SlaveID, data: Array[Byte]): Unit = {
     println(s"Received a framework message from [${executorId.getValue}]")
 
+    //TODO
     val jsonString = new String(data, Charset.forName("UTF-8"))
 
     executorId.getValue match {
@@ -81,7 +82,7 @@ trait Scheduler extends mesos.Scheduler {
 
     if (state == Protos.TaskState.TASK_RUNNING)
       tasksRunning = tasksRunning + 1
-    else if (isTerminal(state))
+    else if (MesosUtils.isTerminalTaskState(state))
       tasksRunning = math.max(0, tasksRunning - 1)
   }
 
@@ -106,16 +107,6 @@ trait Scheduler extends mesos.Scheduler {
     while (tasksRunning > 0) {
       println(s"Shutting down but still have $tasksRunning tasks running.")
       Thread.sleep(3000)
-    }
-  }
-
-  private def isTerminal(state: Protos.TaskState): Boolean = {
-    import Protos.TaskState._
-    state match {
-      case TASK_FINISHED | TASK_FAILED | TASK_KILLED | TASK_LOST =>
-        true
-      case _ =>
-        false
     }
   }
 }

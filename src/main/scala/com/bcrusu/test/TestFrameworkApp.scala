@@ -12,7 +12,7 @@ class TestFrameworkApp extends com.bcrusu.FrameworkApp {
   override def createFrameworkInfo(): FrameworkInfo =
     Protos.FrameworkInfo.newBuilder
       .setName("TestFramework")
-      .setFailoverTimeout(60.seconds.toMillis)
+      .setFailoverTimeout(0)    //seconds
       .setCheckpoint(false)
       .setUser("")
       .build
