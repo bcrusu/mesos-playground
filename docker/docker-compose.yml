@@ -2,44 +2,38 @@ mesos-master:
   image: bcrusu/mesosdev:latest
   entrypoint: mesos-master
   command: --cluster=playground --port=5050 --registry=in_memory --quorum=1 --log_dir=/cluster/master
-  hostname: "mesos_master"
-  ports:
-   - "5050:5050"
+  net: "host"
   volumes:
    - ./cluster:/cluster
+  environment:
+   - LIBPROCESS_IP=10.0.0.33
 
 mesos-slave1:
   image: bcrusu/mesosdev:latest
   entrypoint: mesos-slave
-  command: --master=mesos_master:5050 --port=5051 --resources='cpus:2;mem:512' --log_dir=/cluster/slave1
-  hostname: "mesos_slave1"
-  ports:
-   - "5051:5051"
+  command: --master=10.0.0.33:5050 --port=5051 --resources='cpus:2;mem:512' --log_dir=/cluster/slave1
+  net: "host"
   volumes:
    - ./cluster:/cluster
-  links:
-   - mesos-master
+  environment:
+   - LIBPROCESS_IP=10.0.0.33
 
 mesos-slave2:
   image: bcrusu/mesosdev:latest
   entrypoint: mesos-slave
-  command: --master=mesos_master:5050 --port=5052 --resources='cpus:2;mem:512' --log_dir=/cluster/slave2
-  hostname: "mesos_slave2"
-  ports:
-   - "5052:5052"
+  command: --master=10.0.0.33:5050 --port=5052 --resources='cpus:2;mem:512' --log_dir=/cluster/slave2
+  net: "host"
   volumes:
    - ./cluster:/cluster
-  links:
-   - mesos-master
+  environment:
+   - LIBPROCESS_IP=10.0.0.33
 
 mesos-slave3:
   image: bcrusu/mesosdev:latest
   entrypoint: mesos-slave
-  command: --master=mesos_master:5050 --port=5053 --resources='cpus:2;mem:512' --log_dir=/cluster/slave3
-  hostname: "mesos_slave3"
-  ports:
-   - "5053:5053"
+  command: --master=10.0.0.33:5050 --port=5053 --resources='cpus:2;mem:512' --log_dir=/cluster/slave3
+  net: "host"
   volumes:
    - ./cluster:/cluster
-  links:
-   - mesos-master
+  environment:
+   - LIBPROCESS_IP=10.0.0.33

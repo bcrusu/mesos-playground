@@ -4,7 +4,17 @@ SCRIPTDIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 CLUSTERDIR=${SCRIPTDIR}/cluster
 TARGETJAR=${SCRIPTDIR}/../target/mesosTest-1.0-SNAPSHOT.jar
 
+run_maven() {
+	mvn verify -f $SCRIPTDIR/../pom.xml -q -Dmaven.test.skip=true
+
+	if [ $? -ne 0 ]; then
+		exit 1
+	fi
+}
+
 start_cluster() {
+	run_maven
+
 	if [ ! -f "$TARGETJAR" ]; then
 		echo "Could not find target jar at: $TARGETJAR..."
 		exit 1
@@ -16,6 +26,8 @@ start_cluster() {
 	fi
 
 	cp -u "$TARGETJAR" "$CLUSTERDIR/mesosTest.jar"
+
+	#TODO: automate adding IP 10.0.0.33 to eth0
 
 	docker-compose up -d --no-recreate
 }
