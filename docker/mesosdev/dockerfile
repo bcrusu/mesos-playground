@@ -1,0 +1,11 @@
+FROM bcrusu/mesos:latest
+MAINTAINER bcrusu <bcrusu@users.noreply.github.com>
+LABEL description="Image used during development for running Apache Mesos frameworks written in Scala."
+
+ENV REFRESHED_AT 2015-09-26
+
+RUN apt-get -y update && \
+	apt-get -y install wget && \
+	wget -O ~/scala.deb http://www.scala-lang.org/files/archive/scala-2.11.7.deb && \
+	dpkg -i ~/scala.deb && \
+	rm ~/scala.deb
