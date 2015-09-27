@@ -1,7 +1,7 @@
 mesos-master:
   image: bcrusu/mesosdev:latest
   entrypoint: mesos-master
-  command: --cluster=playground --port=5050 --registry=in_memory --quorum=1 --log_dir=/cluster/master
+  command: --cluster=playground --allocation_interval=1secs --port=5050 --registry=in_memory --quorum=1 --quiet --log_dir=/cluster/master/logs --work_dir=/cluster/master/data
   net: "host"
   volumes:
    - ./cluster:/cluster
@@ -11,7 +11,7 @@ mesos-master:
 mesos-slave1:
   image: bcrusu/mesosdev:latest
   entrypoint: mesos-slave
-  command: --master=10.0.0.33:5050 --port=5051 --resources='cpus:2;mem:512' --log_dir=/cluster/slave1
+  command: --master=10.0.0.33:5050 --port=5051 --resources=cpus:2;mem:512 --attributes=name:slave1 --quiet --frameworks_home=/cluster --log_dir=/cluster/slave1/logs --work_dir=/cluster/slave1/data
   net: "host"
   volumes:
    - ./cluster:/cluster
@@ -21,7 +21,7 @@ mesos-slave1:
 mesos-slave2:
   image: bcrusu/mesosdev:latest
   entrypoint: mesos-slave
-  command: --master=10.0.0.33:5050 --port=5052 --resources='cpus:2;mem:512' --log_dir=/cluster/slave2
+  command: --master=10.0.0.33:5050 --port=5052 --resources=cpus:2;mem:512 --attributes=name:slave2 --quiet --frameworks_home=/cluster --log_dir=/cluster/slave2/logs --work_dir=/cluster/slave2/data
   net: "host"
   volumes:
    - ./cluster:/cluster
@@ -31,7 +31,7 @@ mesos-slave2:
 mesos-slave3:
   image: bcrusu/mesosdev:latest
   entrypoint: mesos-slave
-  command: --master=10.0.0.33:5050 --port=5053 --resources='cpus:2;mem:512' --log_dir=/cluster/slave3
+  command: --master=10.0.0.33:5050 --port=5053 --resources=cpus:2;mem:512 --attributes=name:slave3 --quiet --frameworks_home=/cluster --log_dir=/cluster/slave3/logs --work_dir=/cluster/slave3/data
   net: "host"
   volumes:
    - ./cluster:/cluster
