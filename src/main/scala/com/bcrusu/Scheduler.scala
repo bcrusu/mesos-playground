@@ -1,19 +1,19 @@
 package com.bcrusu
 
-import java.nio.charset.Charset
+import java.util.concurrent.atomic.AtomicInteger
 
 import org.apache.mesos
 import org.apache.mesos.{Protos, SchedulerDriver}
 
 import scala.collection.JavaConverters._
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 import scala.util.Try
 
 trait Scheduler extends mesos.Scheduler {
-  private var tasksCreated = 0
-  private var tasksRunning = 0
+  private val tasksCreated = new AtomicInteger(0)
+  private val tasksRunning = new AtomicInteger(0)
   private var shuttingDown: Boolean = false
 
   override final def disconnected(driver: SchedulerDriver): Unit =
@@ -43,15 +43,6 @@ trait Scheduler extends mesos.Scheduler {
 
   override final def frameworkMessage(driver: SchedulerDriver, executorId: Protos.ExecutorID, slaveId: Protos.SlaveID, data: Array[Byte]): Unit = {
     println(s"Received a framework message from [${executorId.getValue}]")
-
-    //TODO
-    val jsonString = new String(data, Charset.forName("UTF-8"))
-
-    executorId.getValue match {
-      case id if id == "RefreshExecutorId" =>
-
-      case _ => ()
-    }
   }
 
   override final def resourceOffers(driver: SchedulerDriver, offers: java.util.List[Protos.Offer]): Unit = {
@@ -67,7 +58,7 @@ trait Scheduler extends mesos.Scheduler {
 
         if (tasks.nonEmpty) {
           driver.launchTasks(Seq(offer.getId).asJava, tasks.asJava)
-          tasksCreated += tasks.length
+          tasksCreated.addAndGet(tasks.length)
         }
         else
           driver.declineOffer(offer.getId)
@@ -81,9 +72,11 @@ trait Scheduler extends mesos.Scheduler {
     println(s"Task [$taskId] is in state [$state]")
 
     if (state == Protos.TaskState.TASK_RUNNING)
-      tasksRunning = tasksRunning + 1
+      tasksRunning.incrementAndGet()
     else if (MesosUtils.isTerminalTaskState(state))
-      tasksRunning = math.max(0, tasksRunning - 1)
+      tasksRunning.decrementAndGet()
+
+    handleStatusUpdate(taskStatus)
   }
 
   def shutdown[T](maxWait: Duration)(callback: => T): Unit = {
@@ -101,10 +94,12 @@ trait Scheduler extends mesos.Scheduler {
     callback
   }
 
-  protected def handleResourceOffer(offer: Protos.Offer): Seq[Protos.TaskInfo];
+  protected def handleResourceOffer(offer: Protos.Offer): Seq[Protos.TaskInfo]
+
+  protected def handleStatusUpdate(taskStatus: Protos.TaskStatus): Unit
 
   private def waitForRunningTasks(): Unit = {
-    while (tasksRunning > 0) {
+    while (tasksRunning.get > 0) {
       println(s"Shutting down but still have $tasksRunning tasks running.")
       Thread.sleep(3000)
     }

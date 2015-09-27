@@ -3,7 +3,7 @@ package com.bcrusu
 import org.apache.mesos.Protos
 import scala.collection.JavaConverters._
 
-object MesosUtils {
+private object MesosUtils {
   def getScalarResource(name: String, value: Double): Protos.Resource =
     Protos.Resource.newBuilder
       .setType(Protos.Value.Type.SCALAR)
@@ -41,5 +41,13 @@ object MesosUtils {
       case _ =>
         false
     }
+  }
+
+  def getExecutorCommand(executor: String): Protos.CommandInfo = {
+    val mesosClassPath = s"/usr/share/java/mesos-${AppConstants.MesosVersion}.jar:/usr/share/java/mesos-${AppConstants.MesosVersion}-shaded-protobuf.jar"
+    val classpath = s"/cluster/mesosTest.jar:${mesosClassPath}:/usr/share/scala/lib/*"
+    Protos.CommandInfo.newBuilder
+      .setValue(s"java -cp ${classpath} ${AppConstants.AppEntryPoint} -executor=${executor}")
+      .build
   }
 }

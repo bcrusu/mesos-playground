@@ -4,8 +4,6 @@ import com.bcrusu.Scheduler
 import org.apache.mesos.Protos
 import org.apache.mesos.Protos.FrameworkInfo
 
-import scala.concurrent.duration._
-
 class TestFrameworkApp extends com.bcrusu.FrameworkApp {
   override def createScheduler(): Scheduler = new TestScheduler
 
@@ -14,6 +12,6 @@ class TestFrameworkApp extends com.bcrusu.FrameworkApp {
       .setName("TestFramework")
       .setFailoverTimeout(0)    //seconds
       .setCheckpoint(false)
-      .setUser("")
+      .setUser("root")
       .build
 }
