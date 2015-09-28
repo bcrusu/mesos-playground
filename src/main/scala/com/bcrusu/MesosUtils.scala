@@ -44,8 +44,7 @@ private object MesosUtils {
   }
 
   def getExecutorCommand(executor: String): Protos.CommandInfo = {
-    val mesosClassPath = s"/usr/share/java/mesos-${AppConstants.MesosVersion}.jar:/usr/share/java/mesos-${AppConstants.MesosVersion}-shaded-protobuf.jar"
-    val classpath = s"/cluster/mesosTest.jar:${mesosClassPath}:/usr/share/scala/lib/*"
+    val classpath = s"/cluster/mesosTest.jar:/usr/share/scala/lib/*"
     Protos.CommandInfo.newBuilder
       .setValue(s"java -cp ${classpath} ${AppConstants.AppEntryPoint} -executor=${executor}")
       .build
