@@ -2,7 +2,7 @@
 
 SCRIPTDIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 CLUSTERDIR=${SCRIPTDIR}/cluster
-TARGETJAR=${SCRIPTDIR}/../target/mesosTest-1.0-SNAPSHOT.jar
+TARGETJAR=${SCRIPTDIR}/../target/mesosTest-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 run_maven() {
 	mvn verify -f $SCRIPTDIR/../pom.xml -q -Dmaven.test.skip=true
