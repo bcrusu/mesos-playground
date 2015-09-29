@@ -6,34 +6,34 @@ import org.apache.mesos.Protos._
 
 trait Executor extends mesos.Executor {
   override def shutdown(executorDriver: ExecutorDriver): Unit = {
-    println("Executor: shutdown")
+    println("Executor.shutdown")
   }
 
   override def disconnected(executorDriver: ExecutorDriver): Unit = {
-    println("Executor: disconnected")
+    println("Executor.disconnected")
   }
 
   override def killTask(executorDriver: ExecutorDriver, taskID: TaskID): Unit = {
-    println("Executor: killTask")
+    println("Executor.killTask")
   }
 
   override def reregistered(executorDriver: ExecutorDriver, slaveInfo: SlaveInfo): Unit = {
-    println("Executor: reregistered")
+    println("Executor.reregistered")
   }
 
   override def error(executorDriver: ExecutorDriver, s: String): Unit = {
-    println("Executor: error")
+    println("Executor.error")
   }
 
   override def frameworkMessage(executorDriver: ExecutorDriver, bytes: Array[Byte]): Unit = {
-    println("Executor: frameworkMessage")
+    println("Executor.frameworkMessage")
   }
 
   override def registered(executorDriver: ExecutorDriver, executorInfo: ExecutorInfo, frameworkInfo: FrameworkInfo, slaveInfo: SlaveInfo): Unit = {
-    println("Executor: registered")
+    println("Executor.registered")
   }
 
   override def launchTask(executorDriver: ExecutorDriver, taskInfo: TaskInfo): Unit = {
-    println("Executor: launchTask")
+    println("Executor.launchTask")
   }
 }

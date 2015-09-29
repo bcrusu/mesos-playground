@@ -9,7 +9,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 class TestScheduler extends com.bcrusu.Scheduler {
-  val TASK_CPUS = 0.5
+  val TASK_CPUS = 0.25
   val TASK_MEM = 32.0
 
   private var currentTaskId: Int = 0
